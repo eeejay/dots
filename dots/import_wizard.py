@@ -15,6 +15,7 @@ class ImportWizard(object):
         self.window = self.main_xml.get_widget('import_assistant')
         self.main_xml.signal_autoconnect(self)
         self.config_builder = ConfigBuilder()
+
     def run(self):
         intro = self.main_xml.get_widget('intro_page')
         self.window.set_page_complete(intro, True)
@@ -33,6 +34,21 @@ class ImportWizard(object):
         elif page == self.main_xml.get_widget('confirm_page'):
             self._populateSummaryConfig()
             self.window.set_page_complete(self.current_page, True)
+        elif page == self.main_xml.get_widget('input_file_page'):
+            filechooser = self.main_xml.get_widget('doc_file_choose_button')
+            for mimes, patterns, name in (
+                (('application/msword', 'text/html', 'text/xml'),
+                 ('*.doc',), 'Documents'),
+                (None, ('*',), 'All files')):
+                fltr = gtk.FileFilter()
+                if mimes:
+                    for m in mimes:
+                        fltr.add_mime_type(m)
+                for p in patterns:
+                    fltr.add_pattern(p)
+                fltr.set_name(name)
+                filechooser.add_filter(fltr)
+                
 
     def _populateSummaryConfig(self):
         text_buffer = self.main_xml.get_widget('config_textview').get_buffer()
