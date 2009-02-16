@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Mon Feb 16 15:19:00 2009 -->
+<!--Generated with glade3 3.4.5 on Mon Feb 16 17:58:15 2009 -->
 <glade-interface>
   <widget class="GtkAssistant" id="import_assistant">
     <property name="visible">True</property>
@@ -14,11 +14,12 @@
     <child>
       <widget class="GtkLabel" id="intro_page">
         <property name="visible">True</property>
-        <property name="label" translatable="yes">Introduction page</property>
+        <property name="label" translatable="yes">This assistant will provide an easy process for converting rich document formats in to print-quality braille documents.</property>
+        <property name="wrap">True</property>
       </widget>
       <packing>
         <property name="page_type">GTK_ASSISTANT_PAGE_INTRO</property>
-        <property name="title">Document Conversion</property>
+        <property name="title">Braille Import Assistant</property>
       </packing>
     </child>
     <child>
@@ -27,30 +28,30 @@
         <property name="border_width">12</property>
         <property name="spacing">6</property>
         <child>
-          <widget class="GtkTable" id="table1">
+          <widget class="GtkHBox" id="hbox2">
             <property name="visible">True</property>
-            <property name="n_columns">2</property>
+            <property name="spacing">6</property>
             <child>
               <widget class="GtkLabel" id="doc_file_choose_label">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Choose document to convert</property>
+                <property name="label" translatable="yes">Input document</property>
                 <accessibility>
                   <atkrelation target="doc_file_choose_button" type="label-for"/>
                 </accessibility>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkFileChooserButton" id="doc_file_choose_button">
                 <property name="visible">True</property>
-                <accessibility>
-                  <atkrelation target="doc_file_choose_label" type="labelled-by"/>
-                </accessibility>
                 <signal name="file_set" handler="_onInputFileSet"/>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </widget>
@@ -106,31 +107,19 @@
             <property name="column_spacing">12</property>
             <property name="row_spacing">6</property>
             <child>
-              <widget class="GtkLabel" id="trans_table_sel_label">
+              <widget class="GtkFileChooserButton" id="trans_table_file_button">
                 <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Translation table:</property>
-                <accessibility>
-                  <atkrelation target="trans_table_sel_combo" type="label-for"/>
-                </accessibility>
-              </widget>
-              <packing>
-                <property name="x_options">GTK_FILL</property>
-                <property name="y_options"></property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkComboBox" id="trans_table_sel_combo">
-                <property name="visible">True</property>
-                <property name="items" translatable="yes"></property>
+                <property name="sensitive">False</property>
                 <accessibility>
                   <atkrelation target="trans_table_file_label" type="labelled-by"/>
                 </accessibility>
-                <signal name="changed" handler="_onTableChanged"/>
+                <signal name="file_set" handler="_onTableFileSet"/>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
                 <property name="y_options"></property>
               </packing>
             </child>
@@ -152,19 +141,31 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkFileChooserButton" id="trans_table_file_button">
+              <widget class="GtkComboBox" id="trans_table_sel_combo">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
+                <property name="items" translatable="yes"></property>
                 <accessibility>
                   <atkrelation target="trans_table_file_label" type="labelled-by"/>
                 </accessibility>
-                <signal name="file_set" handler="_onTableFileSet"/>
+                <signal name="changed" handler="_onTableChanged"/>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
+                <property name="y_options"></property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="trans_table_sel_label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Translation table:</property>
+                <accessibility>
+                  <atkrelation target="trans_table_sel_combo" type="label-for"/>
+                </accessibility>
+              </widget>
+              <packing>
+                <property name="x_options">GTK_FILL</property>
                 <property name="y_options"></property>
               </packing>
             </child>
@@ -391,16 +392,6 @@ None</property>
         <property name="border_width">12</property>
         <property name="spacing">6</property>
         <child>
-          <widget class="GtkLabel" id="label1">
-            <property name="visible">True</property>
-            <property name="label" translatable="yes">Summary</property>
-          </widget>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-          </packing>
-        </child>
-        <child>
           <widget class="GtkScrolledWindow" id="scrolledwindow1">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -413,13 +404,11 @@ None</property>
               </widget>
             </child>
           </widget>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </widget>
       <packing>
         <property name="page_type">GTK_ASSISTANT_PAGE_CONFIRM</property>
+        <property name="title">Configuration Summary</property>
       </packing>
     </child>
     <child>
@@ -470,6 +459,7 @@ None</property>
       </widget>
       <packing>
         <property name="page_type">GTK_ASSISTANT_PAGE_SUMMARY</property>
+        <property name="title">Braille Output</property>
       </packing>
     </child>
   </widget>
