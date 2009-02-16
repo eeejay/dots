@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!--Generated with glade3 3.4.5 on Mon Feb 16 15:19:00 2009 -->
+<glade-interface>
+  <widget class="GtkAssistant" id="import_assistant">
+    <property name="visible">True</property>
+    <property name="default_width">480</property>
+    <property name="default_height">360</property>
+    <signal name="close" handler="_onAssistantClose"/>
+    <signal name="cancel" handler="_onAssistantCancel"/>
+    <signal name="apply" handler="_onAssistantApply"/>
+    <signal name="delete_event" handler="_onAssistantCancel"/>
+    <signal name="prepare" handler="_onPagePrepare"/>
+    <child>
+      <widget class="GtkLabel" id="intro_page">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Introduction page</property>
+      </widget>
+      <packing>
+        <property name="page_type">GTK_ASSISTANT_PAGE_INTRO</property>
+        <property name="title">Document Conversion</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkVBox" id="input_file_page">
+        <property name="visible">True</property>
+        <property name="border_width">12</property>
+        <property name="spacing">6</property>
+        <child>
+          <widget class="GtkTable" id="table1">
+            <property name="visible">True</property>
+            <property name="n_columns">2</property>
+            <child>
+              <widget class="GtkLabel" id="doc_file_choose_label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Choose document to convert</property>
+                <accessibility>
+                  <atkrelation target="doc_file_choose_button" type="label-for"/>
+                </accessibility>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkFileChooserButton" id="doc_file_choose_button">
+                <property name="visible">True</property>
+                <accessibility>
+                  <atkrelation target="doc_file_choose_label" type="labelled-by"/>
+                </accessibility>
+                <signal name="file_set" handler="_onInputFileSet"/>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkCheckButton" id="include_nemeth_toggle">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Include nemeth semantics</property>
+            <property name="response_id">0</property>
+            <property name="active">True</property>
+            <property name="draw_indicator">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkCheckButton" id="internet_access_toggle">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Look up document definitions online</property>
+            <property name="response_id">0</property>
+            <property name="active">True</property>
+            <property name="draw_indicator">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </widget>
+      <packing>
+        <property name="title">Input File</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkVBox" id="translation_page">
+        <property name="visible">True</property>
+        <property name="border_width">12</property>
+        <child>
+          <widget class="GtkTable" id="table2">
+            <property name="visible">True</property>
+            <property name="n_rows">2</property>
+            <property name="n_columns">2</property>
+            <property name="column_spacing">12</property>
+            <property name="row_spacing">6</property>
+            <child>
+              <widget class="GtkLabel" id="trans_table_sel_label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Translation table:</property>
+                <accessibility>
+                  <atkrelation target="trans_table_sel_combo" type="label-for"/>
+                </accessibility>
+              </widget>
+              <packing>
+                <property name="x_options">GTK_FILL</property>
+                <property name="y_options"></property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkComboBox" id="trans_table_sel_combo">
+                <property name="visible">True</property>
+                <property name="items" translatable="yes"></property>
+                <accessibility>
+                  <atkrelation target="trans_table_file_label" type="labelled-by"/>
+                </accessibility>
+                <signal name="changed" handler="_onTableChanged"/>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="y_options"></property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="trans_table_file_label">
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Table file:</property>
+                <accessibility>
+                  <atkrelation target="trans_table_file_button" type="label-for"/>
+                </accessibility>
+              </widget>
+              <packing>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
+                <property name="x_options">GTK_FILL</property>
+                <property name="y_options"></property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkFileChooserButton" id="trans_table_file_button">
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <accessibility>
+                  <atkrelation target="trans_table_file_label" type="labelled-by"/>
+                </accessibility>
+                <signal name="file_set" handler="_onTableFileSet"/>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
+                <property name="y_options"></property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+      </widget>
+      <packing>
+        <property name="title">Translation</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkVBox" id="output_page">
+        <property name="visible">True</property>
+        <property name="border_width">12</property>
+        <property name="spacing">6</property>
+        <child>
+          <widget class="GtkHBox" id="hbox3">
+            <property name="visible">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <widget class="GtkSpinButton" id="cells_per_line_spin">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="adjustment">40 0 100 1 10 0</property>
+                <accessibility>
+                  <atkrelation target="cells_per_line_label" type="labelled-by"/>
+                </accessibility>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="cells_per_line_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Cells per line</property>
+                <accessibility>
+                  <atkrelation target="cells_per_line_spin" type="label-for"/>
+                </accessibility>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkRadioButton" id="browser_ouput_radio">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Browser output</property>
+            <property name="response_id">0</property>
+            <property name="active">True</property>
+            <property name="draw_indicator">True</property>
+            <property name="group">page_output_radio</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkRadioButton" id="page_output_radio">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Page output</property>
+            <property name="response_id">0</property>
+            <property name="active">True</property>
+            <property name="draw_indicator">True</property>
+            <accessibility>
+              <atkrelation target="page_output_opts_container" type="label-for"/>
+            </accessibility>
+            <signal name="toggled" handler="_onOutputTypeToggle"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkAlignment" id="alignment2">
+            <property name="visible">True</property>
+            <property name="left_padding">12</property>
+            <child>
+              <widget class="GtkVBox" id="page_output_opts_container">
+                <property name="visible">True</property>
+                <property name="spacing">3</property>
+                <accessibility>
+                  <atkrelation target="page_output_radio" type="labelled-by"/>
+                </accessibility>
+                <child>
+                  <widget class="GtkHBox" id="hbox4">
+                    <property name="visible">True</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <widget class="GtkSpinButton" id="lines_per_page_spin">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="adjustment">25 0 100 1 10 0</property>
+                        <accessibility>
+                          <atkrelation target="lines_per_page_label" type="labelled-by"/>
+                        </accessibility>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="lines_per_page_label">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Lines per page</property>
+                        <accessibility>
+                          <atkrelation target="lines_per_page_spin" type="label-for"/>
+                        </accessibility>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkHBox" id="hbox5">
+                    <property name="visible">True</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <widget class="GtkLabel" id="braille_num_pos_comb">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Braille number page at:</property>
+                        <accessibility>
+                          <atkrelation target="braille_num_pos_combo" type="label-for"/>
+                        </accessibility>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkComboBox" id="braille_num_pos_combo">
+                        <property name="visible">True</property>
+                        <property name="items" translatable="yes">Bottom
+Top
+None</property>
+                        <accessibility>
+                          <atkrelation target="braille_num_pos_comb" type="labelled-by"/>
+                        </accessibility>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHBox" id="hbox6">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkButton" id="advanced_output_settings_button">
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">Advanced Settings...</property>
+                <property name="response_id">0</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="pack_type">GTK_PACK_END</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+      </widget>
+      <packing>
+        <property name="title">Output Format</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkVBox" id="confirm_page">
+        <property name="visible">True</property>
+        <property name="border_width">12</property>
+        <property name="spacing">6</property>
+        <child>
+          <widget class="GtkLabel" id="label1">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Summary</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkScrolledWindow" id="scrolledwindow1">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <child>
+              <widget class="GtkTextView" id="config_textview">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+      <packing>
+        <property name="page_type">GTK_ASSISTANT_PAGE_CONFIRM</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkVBox" id="summary_page">
+        <property name="visible">True</property>
+        <property name="border_width">12</property>
+        <property name="spacing">6</property>
+        <child>
+          <widget class="GtkScrolledWindow" id="scrolledwindow2">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <child>
+              <widget class="GtkTextView" id="braille_textview">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+              </widget>
+            </child>
+          </widget>
+        </child>
+        <child>
+          <widget class="GtkHBox" id="hbox1">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkButton" id="save_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">gtk-save-as</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="_onSaveClicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="pack_type">GTK_PACK_END</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+      <packing>
+        <property name="page_type">GTK_ASSISTANT_PAGE_SUMMARY</property>
+      </packing>
+    </child>
+  </widget>
+</glade-interface>
