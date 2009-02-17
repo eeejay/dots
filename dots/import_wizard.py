@@ -15,10 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import pygtk
-pygtk.require('2.0')
+#import pygtk
+#pygtk.require('2.0')
 import gtk, glib
-import gtk.glade
 import os, tempfile
 from config_builder import ConfigBuilder
 import host_settings
@@ -37,7 +36,7 @@ class ImportWizard(object):
     def run(self):
         intro = self.main_xml.get_object('intro_page')
         self.window.set_page_complete(intro, True)
-        #self.window.set_current_page(5)
+        #self.window.set_current_page(3)
         self.window.show_all()
         gtk.main()
 
@@ -123,6 +122,7 @@ class ImportWizard(object):
         argv = '%s -x db "%s" | %s -f %s > "%s"' % \
             (host_settings.antiword, input_file, 
              host_settings.xml2brl, config_fn, outfile)
+        print argv
         os.system(argv)
 
         braille_buffer = \
@@ -159,6 +159,9 @@ class ImportWizard(object):
         model = gtk.ListStore(str, str)
         combo.set_model(model)
         combo.set_row_separator_func(_sepatatorFunc)
+        cell = gtk.CellRendererText()
+        combo.pack_start(cell, True)
+        combo.add_attribute(cell, 'text', 0)
         model.append(['From file...', None])
         model.append([None, None])
         for table in table_list:
