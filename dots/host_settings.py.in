@@ -23,5 +23,5 @@ antiword = "@ANTIWORD@"
 
 xml2brl = "@XML2BRL@"
 
-gladedir = os.path.join(sys.prefix, 'share', 'dots')
+gtkbuilder_dir = os.path.join(sys.prefix, 'share', 'dots')
 

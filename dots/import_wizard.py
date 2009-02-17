@@ -27,14 +27,15 @@ TABLES_DIR = '/home/eitan/svn/liblouis/tables'
 
 class ImportWizard(object):
     def __init__(self):
-        self.main_xml = gtk.glade.XML(
-            os.path.join(host_settings.gladedir, 'dots_assist.glade'))
-        self.window = self.main_xml.get_widget('import_assistant')
-        self.main_xml.signal_autoconnect(self)
+        self.main_xml = gtk.Builder()
+        self.main_xml.add_from_file(
+            os.path.join(host_settings.gtkbuilder_dir, 'dots_assist.xml'))
+        self.window = self.main_xml.get_object('import_assistant')
+        self.main_xml.connect_signals(self)
         self.config_builder = ConfigBuilder()
 
     def run(self):
-        intro = self.main_xml.get_widget('intro_page')
+        intro = self.main_xml.get_object('intro_page')
         self.window.set_page_complete(intro, True)
         #self.window.set_current_page(5)
         self.window.show_all()
@@ -43,16 +44,16 @@ class ImportWizard(object):
     def _onPagePrepare(self, assistant, page):
         self.current_page = page
         
-        if page == self.main_xml.get_widget('translation_page'):
+        if page == self.main_xml.get_object('translation_page'):
             self._populateTablesCombo()
-        elif page == self.main_xml.get_widget('output_page'):
-            self.main_xml.get_widget('braille_num_pos_combo').set_active(0)
+        elif page == self.main_xml.get_object('output_page'):
+            self.main_xml.get_object('braille_num_pos_combo').set_active(0)
             self.window.set_page_complete(self.current_page, True)
-        elif page == self.main_xml.get_widget('confirm_page'):
+        elif page == self.main_xml.get_object('confirm_page'):
             self._populateSummaryConfig()
             self.window.set_page_complete(self.current_page, True)
-        elif page == self.main_xml.get_widget('input_file_page'):
-            filechooser = self.main_xml.get_widget('doc_file_choose_button')
+        elif page == self.main_xml.get_object('input_file_page'):
+            filechooser = self.main_xml.get_object('doc_file_choose_button')
             for mimes, patterns, name in (
                 (('application/msword', 'text/html', 'text/xml'),
                  ('*.doc',), 'Documents'),
@@ -68,34 +69,34 @@ class ImportWizard(object):
                 
 
     def _populateSummaryConfig(self):
-        text_buffer = self.main_xml.get_widget('config_textview').get_buffer()
+        text_buffer = self.main_xml.get_object('config_textview').get_buffer()
 
         self.config_builder['xml']['semanticFiles'] = '*'
-        if self.main_xml.get_widget('include_nemeth_toggle').get_active():
+        if self.main_xml.get_object('include_nemeth_toggle').get_active():
             self.config_builder['xml']['semanticFiles'] += ',nemeth.sem'
 
         self.config_builder['xml']['internetAccess'] = 'no'
-        if self.main_xml.get_widget('internet_access_toggle').get_active():
+        if self.main_xml.get_object('internet_access_toggle').get_active():
             self.config_builder['xml']['internetAccess'] = 'yes'
 
-        combo = self.main_xml.get_widget('trans_table_sel_combo')
+        combo = self.main_xml.get_object('trans_table_sel_combo')
         tablefile = os.path.basename(
             combo.get_model()[combo.get_active_iter()][1])
         self.config_builder['translation']['literaryTextTable'] = tablefile
 
         self.config_builder['outputFormat']['cellsPerLine'] = \
-            self.main_xml.get_widget(
+            self.main_xml.get_object(
             'cells_per_line_spin').get_value_as_int()
 
-        if self.main_xml.get_widget('page_output_radio').get_active():
+        if self.main_xml.get_object('page_output_radio').get_active():
             self.config_builder['outputFormat']['braillePages'] = 'yes'
             self.config_builder['outputFormat']['formatFor'] = 'textDevice'
             self.config_builder['outputFormat']['LinesPerPage'] = \
-                self.main_xml.get_widget(
+                self.main_xml.get_object(
                 'lines_per_page_spin').get_value_as_int()
 
             page_num_pos = \
-                self.main_xml.get_widget('braille_num_pos_combo').get_active()
+                self.main_xml.get_object('braille_num_pos_combo').get_active()
             if page_num_pos == 0:
                 self.config_builder['outputFormat']['braillePageNumberAt'] = \
                     'bottom'
@@ -108,7 +109,7 @@ class ImportWizard(object):
         text_buffer.set_text(str(self.config_builder))
 
     def _onAssistantApply(self, assistant):
-        text_buffer = self.main_xml.get_widget('config_textview').get_buffer()
+        text_buffer = self.main_xml.get_object('config_textview').get_buffer()
         fd, config_fn = tempfile.mkstemp('.config','dots_')
         fconfig = os.fdopen(fd, 'w')
         fconfig.write(text_buffer.get_text(text_buffer.get_start_iter(),
@@ -116,7 +117,7 @@ class ImportWizard(object):
         fconfig.close()
 
         input_file = \
-            self.main_xml.get_widget('doc_file_choose_button').get_filename()
+            self.main_xml.get_object('doc_file_choose_button').get_filename()
 
         outfile = tempfile.mktemp('.brl', 'dots_')
         argv = '%s -x db "%s" | %s -f %s > "%s"' % \
@@ -125,7 +126,7 @@ class ImportWizard(object):
         os.system(argv)
 
         braille_buffer = \
-            self.main_xml.get_widget('braille_textview').get_buffer()
+            self.main_xml.get_object('braille_textview').get_buffer()
         braille_file = open(outfile)
         braille_buffer.set_text(braille_file.read())
         braille_file.close()
@@ -135,7 +136,7 @@ class ImportWizard(object):
 
     def _onSaveClicked(self, button):
         braille_buffer = \
-            self.main_xml.get_widget('braille_textview').get_buffer()
+            self.main_xml.get_object('braille_textview').get_buffer()
         dialog = gtk.FileChooserDialog(
             action=gtk.FILE_CHOOSER_ACTION_SAVE,
             buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
@@ -151,7 +152,7 @@ class ImportWizard(object):
     def _populateTablesCombo(self):
         def _sepatatorFunc(model, itr):
             return model[itr][0] == None
-        combo = self.main_xml.get_widget('trans_table_sel_combo')
+        combo = self.main_xml.get_object('trans_table_sel_combo')
         table_list = filter(lambda x: x.endswith('ctb'),
                             os.listdir(TABLES_DIR))
         table_list.sort()
@@ -164,7 +165,7 @@ class ImportWizard(object):
             model.append([table[:-4], os.path.join(TABLES_DIR, table)])
 
     def _onOutputTypeToggle(self, radio):
-        self.main_xml.get_widget(
+        self.main_xml.get_object(
             'page_output_opts_container').set_sensitive(radio.get_active())
 
     def _onTableChanged(self, combobox):
@@ -172,13 +173,13 @@ class ImportWizard(object):
         itr = combobox.get_active_iter()
         if model[itr][1] == None:
             for suffix in ('button', 'label'):
-                self.main_xml.get_widget(
+                self.main_xml.get_object(
                     'trans_table_file_'+suffix).set_sensitive(True)
 
         self.window.set_page_complete(self.current_page, model[itr][1] != None)
 
     def _onTableFileSet(self, filechooserbutton):
-        model = self.main_xml.get_widget('trans_table_sel_combo').get_model()
+        model = self.main_xml.get_object('trans_table_sel_combo').get_model()
         model[0][1] = filechooserbutton.get_filename()
         self.window.set_page_complete(self.current_page, True)        
 

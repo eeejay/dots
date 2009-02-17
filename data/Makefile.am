@@ -1,4 +1,4 @@
-gladedir = $(datadir)/dots
-glade_DATA = dots_assist.glade
+gtkbuilderdir = $(datadir)/dots
+gtkbuilder_DATA = dots_assist.xml
 
-EXTRA_DIST = $(glade_DATA)
+EXTRA_DIST = $(gtkbuilder_DATA)
