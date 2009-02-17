@@ -1,0 +1,13 @@
+2009-02-17  Eitan Isaacson  <eitan@ascender.com>
+
+	* AUTHORS: 
+	* COPYING: 
+	* README: 
+	* bin/dots.in: 
+	* data/dots_assist.glade: 
+	* dots/__init__.py: 
+	* dots/config_builder.py: 
+	* dots/host_settings.py.in: 
+	* dots/import_wizard.py: Added copyright headers and some documentation.
+
+
