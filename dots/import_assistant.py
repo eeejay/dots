@@ -25,10 +25,14 @@ import host_settings
 TABLES_DIR = '/home/eitan/svn/liblouis/tables'
 
 class ImportAssistant(object):
-    def __init__(self):
+    def __init__(self, main_app=None, xml_file=None):
+        self.main_app = main_app
         self.main_xml = gtk.Builder()
-        self.main_xml.add_from_file(
-            os.path.join(host_settings.gtkbuilder_dir, 'dots_assist.xml'))
+        if not xml_file:
+            self.main_xml.add_from_file(
+                os.path.join(host_settings.gtkbuilder_dir, 'dots_assist.xml'))
+        else:
+            self.main_xml.add_from_file(xml_file)
         self.window = self.main_xml.get_object('import_assistant')
         self.main_xml.connect_signals(self)
         self.config_builder = ConfigBuilder()
@@ -38,7 +42,8 @@ class ImportAssistant(object):
         self.window.set_page_complete(intro, True)
         #self.window.set_current_page(3)
         self.window.show_all()
-        gtk.main()
+        if __name__ == "__main__":
+            gtk.main()
 
     def _onPagePrepare(self, assistant, page):
         self.current_page = page
@@ -108,6 +113,22 @@ class ImportAssistant(object):
         text_buffer.set_text(str(self.config_builder))
 
     def _onAssistantApply(self, assistant):
+        input_file = \
+            self.main_xml.get_object('doc_file_choose_button').get_filename()
+
+        text_buffer = self.main_xml.get_object('config_textview').get_buffer()
+        config_text = text_buffer.get_text(text_buffer.get_start_iter(),
+                                           text_buffer.get_end_iter())
+        
+        if self.main_app:
+            self.main_app.newProject(input_file, config_text)
+        else:
+            print config_text
+            print '-'*80
+            print input_file
+            print '='*80
+
+    def _onAssistantApplyOld(self, assistant):
         text_buffer = self.main_xml.get_object('config_textview').get_buffer()
         fd, config_fn = tempfile.mkstemp('.config','dots_')
         fconfig = os.fdopen(fd, 'w')
@@ -188,10 +209,15 @@ class ImportAssistant(object):
 
     def _onAssistantCancel(self, assistant, *args):
         assistant.destroy()
-        gtk.main_quit()
+        if __name__ == "__main__":
+            gtk.main_quit()
 
     def _onAssistantClose(self, assistant):
         self._onAssistantCancel(assistant)
 
     def _onInputFileSet(self, filechooserbutton):
         self.window.set_page_complete(self.current_page, True)
+
+if __name__ == "__main__":
+    ia = ImportAssistant(xml_file='data/dots_assist.xml')
+    ia.run()
