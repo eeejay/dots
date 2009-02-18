@@ -19,6 +19,8 @@ import gtk, glib
 import os, tempfile
 from config_builder import ConfigBuilder
 import host_settings
+from import_assistant import ImportAssistant
+from dots_project import DotsProject
 
 class AppWindow(object):
     def __init__(self):
@@ -36,6 +38,19 @@ class AppWindow(object):
 
     def _onImport(self, *args):
         print '_onImport', args
+        ia = ImportAssistant(self)
+        ia.run()
+
+    def newProject(self, input_file, config_text):
+        dotsproj = DotsProject(input_file)
+        dotsproj.transcribeBraille(config_text)
+        sw = gtk.ScrolledWindow()
+        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        textview = gtk.TextView(dotsproj)
+        sw.add(textview)
+        self.main_notebook.append_page(
+            sw, gtk.Label(os.path.basename(input_file)))
+        sw.show_all()
 
     def run(self):
         self.window.show_all()
