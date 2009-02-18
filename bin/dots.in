@@ -18,6 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os.path, sys
+import pygtk
+pygtk.require('2.0')
+import gtk
 
 # We can't rely on prefix if we're installed by relocated RPM. Instead, we 
 # use __file__ and for now hope that lib is relative to bin.
@@ -29,5 +32,5 @@ sys.path.insert(1, libs)
 
 import dots
 
-main_window = dots.ImportWizard()
+main_window = dots.AppWindow()
 main_window.run()

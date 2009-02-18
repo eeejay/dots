@@ -24,7 +24,7 @@ import host_settings
 
 TABLES_DIR = '/home/eitan/svn/liblouis/tables'
 
-class ImportWizard(object):
+class ImportAssistant(object):
     def __init__(self):
         self.main_xml = gtk.Builder()
         self.main_xml.add_from_file(

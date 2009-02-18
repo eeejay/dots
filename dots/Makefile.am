@@ -2,7 +2,8 @@ dotsdir = $(pkgpythondir)/
 
 dots_PYTHON = \
 	__init__.py \
-	import_wizard.py \
+	app_window.py \
+	import_assistant.py \
 	host_settings.py \
 	config_builder.py
 
