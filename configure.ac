@@ -6,8 +6,6 @@ GNOME_DOC_INIT
 dnl == check for python ==
 AM_PATH_PYTHON(2.4)
 
-AC_SUBST(DATADIR)
-
 dnl == check for xml2brl ==
 AC_PATH_PROG(XML2BRL, xml2brl)
 test -z "$XML2BRL" && AC_MSG_ERROR([

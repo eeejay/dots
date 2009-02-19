@@ -30,7 +30,15 @@ libs = os.path.join(sys.prefix, 'lib',
 # point to the proper site-packages path
 sys.path.insert(1, libs)
 
-import dots
+# This might be run from the build dir.
+_dirname = os.path.dirname(__file__)
+if os.path.dirname(__file__) != "@prefix@/bin":
+    srcdir = os.path.normpath(os.path.join(_dirname, '..'))
+    sys.path.insert(1, srcdir)
+    import dots
+    dots.host_settings.gtkbuilder_dir = os.path.join(srcdir, 'data')
+else:
+    import dots
 
 main_window = dots.AppWindow()
 main_window.run()

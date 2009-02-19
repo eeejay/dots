@@ -16,4 +16,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from app_window import AppWindow
+import host_settings
 
