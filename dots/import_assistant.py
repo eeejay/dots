@@ -110,6 +110,8 @@ class ImportAssistant(object):
             elif page_num_pos == 2:
                 self.config_builder['outputFormat']['braillePages'] = 'no'
 
+            self.config_builder['outputFormat']['outputEncoding'] = 'UTF8'
+
         text_buffer.set_text(str(self.config_builder))
 
     def _onAssistantApply(self, assistant):

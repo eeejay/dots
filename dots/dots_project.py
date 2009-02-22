@@ -15,16 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, tempfile, host_settings, sys, gtk
-
+import ascii_braille
 
 class DotsProject(gtk.ScrolledWindow):
     def __init__(self, input_file, name):
         gtk.ScrolledWindow.__init__(self)
         self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.view = gtk.TextView()
+        self.view.set_editable(False)
         self.add(self.view)
         self.buffer = self.view.get_buffer()
         self.buffer.connect("modified-changed", self._onModified)
+        self.braille_buffer = gtk.TextBuffer()
         self.input_file = input_file
         self.tab_label = gtk.Label()
         self.set_name(name)
@@ -45,6 +47,12 @@ class DotsProject(gtk.ScrolledWindow):
         self.config_text = config_text
         self._transcribeBraille()
 
+    def view_ascii(self):
+        self.view.set_buffer(self.buffer)
+
+    def view_braille(self):
+        self.view.set_buffer(self.braille_buffer)
+
     def _transcribeBraille(self):
         # Write config file.
         fd, config_fn = tempfile.mkstemp('.config','dots_')
@@ -62,8 +70,13 @@ class DotsProject(gtk.ScrolledWindow):
 
         # Write braille output to text buffer.
         braille_file = open(outfile)
-        self.buffer.set_text(braille_file.read())
+        braille_text = braille_file.read()
+        self.buffer.set_text(braille_text)
         braille_file.close()
 
+        self.braille_buffer.set_text(
+            ''.join([ascii_braille.ascii_to_braille.get(
+                        x, '') for x in braille_text]))
+        
         os.remove(config_fn)
         os.remove(outfile)

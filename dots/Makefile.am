@@ -2,6 +2,7 @@ dotsdir = $(pkgpythondir)/
 
 dots_PYTHON = \
 	__init__.py \
+	ascii_braille.py \
 	app_window.py \
 	dots_project.py \
 	import_assistant.py \

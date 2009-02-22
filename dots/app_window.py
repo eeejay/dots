@@ -40,6 +40,13 @@ class AppWindow(object):
         ia = ImportAssistant(self)
         ia.run()
 
+    def _OnBrailleViewToggle(self, ascii_item):
+        current_project = self._getCurrentProject()
+        if ascii_item.get_active():
+            current_project.view_ascii()
+        else:
+            current_project.view_braille()
+
     def _getCurrentProject(self):
         return self.main_notebook.get_nth_page(
             self.main_notebook.get_current_page())
