@@ -110,7 +110,8 @@ class ImportAssistant(object):
             elif page_num_pos == 2:
                 self.config_builder['outputFormat']['braillePages'] = 'no'
 
-            self.config_builder['outputFormat']['outputEncoding'] = 'UTF8'
+            # We should be able to provide a visual line for this too.
+            #self.config_builder['outputFormat']['pageEnd'] = '\r\n'
 
         text_buffer.set_text(str(self.config_builder))
 

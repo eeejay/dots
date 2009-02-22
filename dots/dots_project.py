@@ -16,17 +16,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, tempfile, host_settings, sys, gtk
 import ascii_braille
+import gtksourceview, pango
 
 class DotsProject(gtk.ScrolledWindow):
     def __init__(self, input_file, name):
         gtk.ScrolledWindow.__init__(self)
         self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.view = gtk.TextView()
+        self.view = gtksourceview.SourceView()
+        self.view.set_right_margin(25)
+        self.view.set_left_margin(25)
         self.view.set_editable(False)
+        self.view.modify_font(pango.FontDescription('Mono'))
         self.add(self.view)
         self.buffer = self.view.get_buffer()
         self.buffer.connect("modified-changed", self._onModified)
-        self.braille_buffer = gtk.TextBuffer()
+        self.braille_buffer = gtksourceview.SourceBuffer()
         self.input_file = input_file
         self.tab_label = gtk.Label()
         self.set_name(name)
