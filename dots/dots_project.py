@@ -17,11 +17,29 @@
 import os, tempfile, host_settings, sys, gtk
 
 
-class DotsProject(gtk.TextBuffer):
-    def __init__(self, input_file):
-        gtk.TextBuffer.__init__(self)
+class DotsProject(gtk.ScrolledWindow):
+    def __init__(self, input_file, name):
+        gtk.ScrolledWindow.__init__(self)
+        self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.view = gtk.TextView()
+        self.add(self.view)
+        self.buffer = self.view.get_buffer()
+        self.buffer.connect("modified-changed", self._onModified)
         self.input_file = input_file
+        self.tab_label = gtk.Label()
+        self.set_name(name)
+        self.out_file = None
         self.config_text = None
+
+    def set_name(self, name):
+        gtk.ScrolledWindow.set_name(self, name)
+        self.tab_label.set_text(name)
+
+    def _onModified(self, textbuffer):
+        if textbuffer.get_modified():
+            self.tab_label.set_text('*'+self.name)
+        else:
+            self.tab_label.set_text(self.name)
 
     def transcribeBraille(self, config_text):
         self.config_text = config_text
@@ -44,7 +62,7 @@ class DotsProject(gtk.TextBuffer):
 
         # Write braille output to text buffer.
         braille_file = open(outfile)
-        self.set_text(braille_file.read())
+        self.buffer.set_text(braille_file.read())
         braille_file.close()
 
         os.remove(config_fn)

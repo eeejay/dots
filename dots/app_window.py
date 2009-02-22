@@ -33,30 +33,73 @@ class AppWindow(object):
         self.main_xml.connect_signals(self)
         self.config_builder = ConfigBuilder()
 
-    def _onOpen(self, *args):
-        print '_onOpen', args
+    def _onOpen(self, action):
+        print '_onOpen', action
 
-    def _onImport(self, *args):
-        print '_onImport', args
+    def _onImport(self, action):
         ia = ImportAssistant(self)
         ia.run()
 
+    def _getCurrentProject(self):
+        return self.main_notebook.get_nth_page(
+            self.main_notebook.get_current_page())
+
+    def _onSave(self, action):
+        curr_project = self._getCurrentProject()
+        if curr_project.out_file is None:
+            self._onSaveAs(action)
+        else:
+            fsave = open(curr_project.out_file, 'w')
+            fsave.write(curr_project.buffer.get_text(
+                    curr_project.buffer.get_start_iter(),
+                    curr_project.buffer.get_end_iter()))
+            fsave.close()
+            curr_project.buffer.set_modified(False)            
+
+    def _onSaveAs(self, action):
+        curr_project = self._getCurrentProject()
+
+        dialog = gtk.FileChooserDialog(
+            action=gtk.FILE_CHOOSER_ACTION_SAVE,
+            buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                     gtk.STOCK_SAVE, gtk.RESPONSE_OK))
+
+        if curr_project.out_file:
+            dialog.set_filename(curr_project.out_file)
+
+        if (dialog.run() == gtk.RESPONSE_OK):
+            fsave = open(dialog.get_filename(), 'w')
+            fsave.write(curr_project.buffer.get_text(
+                    curr_project.buffer.get_start_iter(),
+                    curr_project.buffer.get_end_iter()))
+            fsave.close()
+            curr_project.out_file = dialog.get_filename()
+            curr_project.set_name(os.path.basename(curr_project.out_file))
+            curr_project.buffer.set_modified(False)
+            
+        dialog.destroy()
+
+    def _getUnsavedNum(self):
+        count = 0
+        for i in xrange(self.main_notebook.get_n_pages()):
+            page = self.main_notebook.get_nth_page(i)
+            label_text = self.main_notebook.get_tab_label_text(page)
+            if label_text.startswith("Unsaved Document "):
+                count += 1
+        return count + 1
+
     def newProject(self, input_file, config_text):
-        dotsproj = DotsProject(input_file)
+        dotsproj = DotsProject(
+            input_file, "Unsaved Document %d" % self._getUnsavedNum())
         dotsproj.transcribeBraille(config_text)
-        sw = gtk.ScrolledWindow()
-        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        textview = gtk.TextView(dotsproj)
-        sw.add(textview)
-        self.main_notebook.append_page(
-            sw, gtk.Label(os.path.basename(input_file)))
-        sw.show_all()
+        self.main_notebook.append_page(dotsproj, dotsproj.tab_label)
+        dotsproj.show_all()
 
     def run(self):
         self.window.show_all()
         gtk.main()
 
-    def _onQuit(self, window, event):
+    def _onQuit(self, window, event=None):
         gtk.main_quit()
 
 if __name__ == "__main__":
