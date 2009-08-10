@@ -22,7 +22,7 @@ import os, tempfile
 from config_builder import ConfigBuilder
 import host_settings
 
-TABLES_DIR = '/home/eitan/svn/liblouis/tables'
+TABLES_DIR = host_settings.tablesdir
 
 class ImportAssistant(object):
     def __init__(self, main_app=None, xml_file=None):
@@ -177,7 +177,7 @@ class ImportAssistant(object):
         def _sepatatorFunc(model, itr):
             return model[itr][0] == None
         combo = self.main_xml.get_object('trans_table_sel_combo')
-        table_list = filter(lambda x: x.endswith('ctb'),
+        table_list = filter(lambda x: x.endswith('ctb') or x.endswith('utb'),
                             os.listdir(TABLES_DIR))
         table_list.sort()
         model = gtk.ListStore(str, str)

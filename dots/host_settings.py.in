@@ -23,5 +23,7 @@ antiword = "@ANTIWORD@"
 
 xml2brl = "@XML2BRL@"
 
+tablesdir = "@TABLES_DIR@"
+
 gtkbuilder_dir = os.path.join(sys.prefix, 'share', 'dots')
 

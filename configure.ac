@@ -6,6 +6,13 @@ GNOME_DOC_INIT
 dnl == check for python ==
 AM_PATH_PYTHON(2.4)
 
+dnl == Check for liblouis and liblouisxml
+PKG_CHECK_MODULES(LIBLOUIS, [liblouis >= 1.6.2 liblouisxml >= 1.9.1])
+
+dnl Find tables dir
+TABLES_DIR=`pkg-config --variable=tablesdir liblouis`
+AC_SUBST(TABLES_DIR)
+
 dnl == check for xml2brl ==
 AC_PATH_PROG(XML2BRL, xml2brl)
 test -z "$XML2BRL" && AC_MSG_ERROR([
