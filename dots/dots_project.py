@@ -17,6 +17,7 @@
 import os, tempfile, host_settings, sys, gtk
 import ascii_braille
 import gtksourceview2, pango
+import mimetypes
 
 class DotsProject(gtk.ScrolledWindow):
     def __init__(self, input_file, name):
@@ -67,9 +68,15 @@ class DotsProject(gtk.ScrolledWindow):
         # Create a temporary out file.
         outfile = tempfile.mktemp('.brl', 'dots_')
 
-        argv = '%s -x db "%s" | %s -f %s > "%s"' % \
-            (host_settings.antiword, self.input_file, 
-             host_settings.xml2brl, config_fn, outfile)
+        mimetype, ignore = mimetypes.guess_type(self.input_file)
+        if mimetype == 'application/msword':
+            argv = '%s -x db "%s" | %s -f %s > "%s"' % \
+                (host_settings.antiword, self.input_file, 
+                 host_settings.xml2brl, config_fn, outfile)
+        else:
+            argv = '%s -f %s < %s > "%s"' % \
+                (host_settings.xml2brl, config_fn, self.input_file, outfile)
+
         os.system(argv)
 
         # Write braille output to text buffer.
